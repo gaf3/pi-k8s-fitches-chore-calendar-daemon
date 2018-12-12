@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chore-calendar-daemon
+  namespace: fitches
+  labels:
+    app: chore-calendar-daemon
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chore-calendar-daemon
+  template:
+    metadata:
+      labels:
+        app: chore-calendar-daemon
+    spec:
+      containers:
+      - name: rest
+        image: docker.io/gaf3/pi-k8s-fitches-chore-calendar-daemon:0.1-x86_64
+        imagePullPolicy: Always
+        env:
+          - name: GOOGLE_CALENDAR
+            value: pi-k8s-fitches-chores
+          - name: REDIS_HOST
+            value: redis.fitches.svc.cluster.local
+          - name: REDIS_PORT
+            value: "6379"
+          - name: REDIS_CHANNEL
+            value: speech
+          - name: RANGE
+            value: "300"
+          - name: SLEEP
+            value: "30"
+        volumeMounts:
+        - name: config
+          mountPath: /etc/pi-k8s
+      volumes:
+        - name: config
+          configMap:
+            name: chore-calendar-daemon
