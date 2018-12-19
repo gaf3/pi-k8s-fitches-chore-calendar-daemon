@@ -1,5 +1,5 @@
 google-api-python-client
 oauth2client
 PyYAML
-git+git://github.com/gaf3/pi-k8s-fitches-chore-redis@v0.3#egg=pi-k8s-fitches-chore-redis
+git+git://github.com/pi-k8s-fitches/chore-redis@v0.4#egg=pi-k8s-fitches-chore-redis
 coverage
