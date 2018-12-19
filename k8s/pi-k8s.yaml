@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
       - name: rest
-        image: docker.io/gaf3/pi-k8s-fitches-chore-calendar-daemon:0.2-armv7l
+        image: docker.io/gaf3/pi-k8s-fitches-chore-calendar-daemon:0.3-armv7l
         imagePullPolicy: Always
         env:
           - name: GOOGLE_CALENDAR
