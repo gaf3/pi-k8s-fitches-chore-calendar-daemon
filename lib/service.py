@@ -41,7 +41,7 @@ class Daemon(object):
         self.calendar_api = googleapiclient.discovery.build(
             'calendar', 
             'v3', 
-            http=oauth2client.file.Storage('/opt/pi-k8s/token.json').get().authorize(httplib2.Http())
+            http=oauth2client.file.Storage('/etc/pi-k8s/token.json').get().authorize(httplib2.Http())
         )
 
         for calendar in self.calendar_api.calendarList().list().execute().get('items', []):
