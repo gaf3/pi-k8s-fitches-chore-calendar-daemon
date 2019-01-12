@@ -87,7 +87,7 @@ class TestService(unittest.TestCase):
 
         self.assertEqual(self.daemon.calendar_id, "peeps")
         mock_build.assert_called_once_with("calendar", "v3", http="www")
-        mock_storage.assert_called_once_with('/etc/pi-k8s/token.json')
+        mock_storage.assert_called_once_with('/opt/pi-k8s/token.json')
         mock_storage.return_value.get.return_value.authorize.assert_called_once_with("web")
         mock_api.calendarList.return_value.list.return_value.execute.return_value.get.assert_called_once_with("items", [])
 

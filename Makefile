@@ -1,11 +1,11 @@
 MACHINE=$(shell uname -m)
 IMAGE=pi-k8s-fitches-chore-calendar-daemon
 VERSION=0.3
-TAG="$(VERSION)-$(MACHINE)"
+TAG=$(VERSION)-$(MACHINE)
 ACCOUNT=gaf3
 NAMESPACE=fitches
 VARIABLES=-e GOOGLE_CALENDAR='pi-k8s-fitches-chores' -e REDIS_HOST='host.docker.internal' -e REDIS_PORT='6379' -e REDIS_CHANNEL='speech' -e RANGE='300' -e SLEEP='30'
-VOLUMES=-v ${PWD}/credentials.json:/etc/pi-k8s/credentials.json -v ${PWD}/token.json:/etc/pi-k8s/token.json -v ${PWD}/lib/:/opt/pi-k8s/lib/ -v ${PWD}/test/:/opt/pi-k8s/test/ -v ${PWD}/bin/:/opt/pi-k8s/bin/
+VOLUMES=-v ${PWD}/secrets/:/etc/pi-k8s/ -v ${PWD}/lib/:/opt/pi-k8s/lib/ -v ${PWD}/test/:/opt/pi-k8s/test/ -v ${PWD}/bin/:/opt/pi-k8s/bin/
 
 ifeq ($(MACHINE),armv7l)
 BASE=resin/raspberry-pi-alpine-python:3.6.1
@@ -30,8 +30,11 @@ run:
 push: build
 	docker push $(ACCOUNT)/$(IMAGE):$(TAG)
 
+register:
+	docker run -it $(VARIABLES) $(VOLUMES) $(ACCOUNT)/$(IMAGE):$(TAG) bin/register.py --noauth_local_webserver
+
 config:
-	kubectl create configmap -n fitches chore-calendar-daemon --dry-run --from-file=credentials.json --from-file=token.json -o yaml | kubectl -n fitches --context=pi-k8s apply -f -
+	kubectl create configmap -n fitches chore-calendar-daemon --dry-run --from-file=secrets/credentials.json --from-file=secrets/token.json -o yaml | kubectl -n fitches --context=pi-k8s apply -f -
 
 create:
 	kubectl --context=pi-k8s create -f k8s/pi-k8s.yaml
@@ -43,7 +46,7 @@ delete:
 	kubectl --context=pi-k8s delete -f k8s/pi-k8s.yaml
 
 config-dev:
-	kubectl create configmap -n fitches chore-calendar-daemon --dry-run --from-file=credentials.json --from-file=token.json -o yaml | kubectl -n fitches --context=minikube apply -f -
+	kubectl create configmap -n fitches chore-calendar-daemon --dry-run --from-file=secrets/credentials.json --from-file=secrets/token.json -o yaml | kubectl -n fitches --context=minikube apply -f -
 
 create-dev:
 	kubectl --context=minikube create -f k8s/minikube.yaml
