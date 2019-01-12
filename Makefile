@@ -5,7 +5,7 @@ TAG="$(VERSION)-$(MACHINE)"
 ACCOUNT=gaf3
 NAMESPACE=fitches
 VARIABLES=-e GOOGLE_CALENDAR='pi-k8s-fitches-chores' -e REDIS_HOST='host.docker.internal' -e REDIS_PORT='6379' -e REDIS_CHANNEL='speech' -e RANGE='300' -e SLEEP='30'
-VOLUMES=-v ${PWD}/credentials.json/:/etc/pi-k8s/credentials.json -v ${PWD}/token.json/:/etc/pi-k8s/token.json -v ${PWD}/lib/:/opt/pi-k8s/lib/ -v ${PWD}/test/:/opt/pi-k8s/test/ -v ${PWD}/bin/:/opt/pi-k8s/bin/
+VOLUMES=-v ${PWD}/credentials.json:/etc/pi-k8s/credentials.json -v ${PWD}/token.json:/etc/pi-k8s/token.json -v ${PWD}/lib/:/opt/pi-k8s/lib/ -v ${PWD}/test/:/opt/pi-k8s/test/ -v ${PWD}/bin/:/opt/pi-k8s/bin/
 
 ifeq ($(MACHINE),armv7l)
 BASE=resin/raspberry-pi-alpine-python:3.6.1
